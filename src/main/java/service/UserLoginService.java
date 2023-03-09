@@ -5,11 +5,23 @@ import java.io.IOException;
 
 import org.apache.tomcat.jakartaee.commons.io.IOUtils;
 
+import com.google.gson.Gson;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
+
+
+class UserLoginInput {
+	
+}
+
+class UserLoginResp extends HttpServiceResponseData {
+	
+}
+
 
 /**
  * Servlet implementation class UserLoginService
@@ -33,21 +45,23 @@ public final class UserLoginService extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		Error error;
+		HttpServiceOutput output = new HttpServiceOutput();
 
-		BufferedReader bReader = request.getReader();
 		String body = new HttpUtil().getBodyString(request);
 		if (body == null) {
 			error = HttpUtil.HTTPBodyReadError;
 		}
 		error = new HttpUtil().checkHttpRequestAuthorizedError(request, body, false);
 		if (error == null) {
-
+			UserLoginResp loginResp = new UserLoginResp();
+			output.resp = loginResp;
+			response.getWriter().write(new Gson().toJson(output));
+			return;
 		}
 		
-		
-		
-		new HttpUtil().setStatus(response, error);
-		
+		new HttpUtil().setStatus(response, output, error);
+		response.getWriter().write(new Gson().toJson(output));
 	}
 
 }
+

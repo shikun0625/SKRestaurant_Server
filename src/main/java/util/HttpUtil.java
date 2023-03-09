@@ -14,6 +14,7 @@ import javax.persistence.Persistence;
 import database.SkAuthorizedInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.HttpServiceOutput;
 
 public final class HttpUtil {
 
@@ -84,7 +85,19 @@ public final class HttpUtil {
 		return null;
 	}
 	
-	public void setStatus(HttpServletResponse response, Error error) {
-		
+	public void setStatus(HttpServletResponse response,HttpServiceOutput output, Error error) {
+		if (error == AuthorizedError || error == AuthorizedExpiredError) {
+			response.setStatus(403);
+			output.errorMessage = error.getMessage();
+			output.status = 403;
+		} else if (error == HTTPBodyReadError) {
+			response.setStatus(500);
+			output.errorMessage = error.getMessage();
+			output.status = 500;
+		} else {
+			response.setStatus(500);
+			output.errorMessage = error.getMessage();
+			output.status = 500;
+		}
 	}
 }
