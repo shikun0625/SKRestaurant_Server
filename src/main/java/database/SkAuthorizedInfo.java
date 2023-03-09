@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="sk_authorized")
 @NamedQuery(name="SkAuthorizedInfo.findAll", query="SELECT s FROM SkAuthorizedInfo s")
-@NamedQuery(name="SkAuthorizedInfo.findAuthorizedNotExpired", query="SELECT s FROM SkAuthorizedInfo s WHERE s.token = :token AND s.device_id = :deviceId AND s.expired_time > :expiredTime")
+@NamedQuery(name="SkAuthorizedInfo.findAuthorizedNotExpired", query="SELECT s FROM SkAuthorizedInfo s WHERE s.token = :token AND s.deviceId = :deviceId AND s.expiredTime > :expiredTime")
 public class SkAuthorizedInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
