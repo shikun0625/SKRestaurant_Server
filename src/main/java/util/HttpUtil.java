@@ -49,7 +49,6 @@ public final class HttpUtil {
 		}
 
 		if (checkUser) {
-
 			Query query = eManager.createNamedQuery("SkAuthorizedInfo.findAuthorizedNotExpired");
 			query.setParameter("token", userTokenString);
 			query.setParameter("deviceId", deviceIdString);
@@ -80,7 +79,6 @@ public final class HttpUtil {
 			}
 			return wholeStr;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
