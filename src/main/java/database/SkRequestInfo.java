@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="sk_request")
 @NamedQuery(name="SkRequestInfo.findAll", query="SELECT s FROM SkRequestInfo s")
+@NamedQuery(name="SkRequestInfo.findByRequestId", query="SELECT s FROM SkRequestInfo s WHERE s.requestId = :requestId")
 public class SkRequestInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +27,17 @@ public class SkRequestInfo implements Serializable {
 	@Column(name="create_time")
 	private Timestamp createTime;
 
+	private String device;
+
+	@Column(name="device_id")
+	private String deviceId;
+
 	private String host;
+
+	private String os;
+
+	@Column(name="os_version")
+	private String osVersion;
 
 	private String parameter;
 
@@ -71,12 +82,44 @@ public class SkRequestInfo implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public String getDevice() {
+		return this.device;
+	}
+
+	public void setDevice(String device) {
+		this.device = device;
+	}
+
+	public String getDeviceId() {
+		return this.deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
 	public String getHost() {
 		return this.host;
 	}
 
 	public void setHost(String host) {
 		this.host = host;
+	}
+
+	public String getOs() {
+		return this.os;
+	}
+
+	public void setOs(String os) {
+		this.os = os;
+	}
+
+	public String getOsVersion() {
+		return this.osVersion;
+	}
+
+	public void setOsVersion(String osVersion) {
+		this.osVersion = osVersion;
 	}
 
 	public String getParameter() {

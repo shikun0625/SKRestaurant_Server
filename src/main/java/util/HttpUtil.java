@@ -2,24 +2,30 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import database.SkAuthorizedInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.HttpServiceOutput;
 
 public final class HttpUtil {
 
-	public final static Error AuthorizedError = new Error("用户验证失败");
-	public final static Error AuthorizedExpiredError = new Error("用户验证过期");
+	public final static Error AuthorizedError = new Error("请求验证失败");
+	public final static Error UserAuthorizedError = new Error("用户验证失败");
+	public final static Error UserAuthorizedExpiredError = new Error("用户验证过期");
 	public final static Error HTTPBodyReadError = new Error("请求数据读取失败");
+	public final static Error HTTPRepeatRequestError = new Error("重复请求");
 
-	public Error checkHttpRequestAuthorizedError(EntityManager eManager, HttpServletRequest request, String bodyStr, boolean checkUser) {
+	public static Logger logger = Logger.getLogger(HttpUtil.class.getName());
+
+	public Error checkHttpRequestAuthorized(EntityManager eManager, HttpServletRequest request, String bodyStr,
+			boolean checkUser) {
 		String timeString = request.getHeader("request_time");
 		String deviceIdString = request.getHeader("device_id");
 		String deviceNameString = request.getHeader("device");
@@ -29,6 +35,18 @@ public final class HttpUtil {
 		String userTokenString = request.getHeader("user_token");
 		String requestAuth = request.getHeader("request_auth");
 
+		Query query = eManager.createNamedQuery("SkRequestInfo.findByRequestId");
+		query.setParameter("requestId", "requestIdString");
+
+		long startTime = System.currentTimeMillis();
+		try {
+			query.getSingleResult();
+			return HTTPRepeatRequestError;
+		} catch (Exception e) {
+
+		}
+		logger.info("query request time : " + (System.currentTimeMillis() - startTime));
+
 		String headerString = timeString + deviceIdString + deviceNameString + osString + osVersionString
 				+ requestIdString;
 		if (userTokenString != null) {
@@ -36,33 +54,23 @@ public final class HttpUtil {
 		}
 
 		String requestString = "skrestaurant_key" + bodyStr + headerString;
-		MessageDigest digest = null;
-		try {
-			digest = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e1) {
-			e1.printStackTrace();
-		}
-		byte[] bs = digest.digest(requestString.getBytes());
-		String requestToken = new BigInteger(1, bs).toString(16);
+		logger.info("request string : " + requestString);
+		String requestToken = getMD5(requestString);
+		logger.info("request token : " + requestToken);
 		if (!requestToken.equals(requestAuth)) {
 			return AuthorizedError;
 		}
 
 		if (checkUser) {
-			Query query = eManager.createNamedQuery("SkAuthorizedInfo.findAuthorizedNotExpired");
+			query = eManager.createNamedQuery("SkAuthorizedInfo.findByToken");
 			query.setParameter("token", userTokenString);
-			query.setParameter("deviceId", deviceIdString);
 			try {
-				query.getSingleResult();
+				SkAuthorizedInfo authorizedInfo = (SkAuthorizedInfo) query.getSingleResult();
+				if (authorizedInfo.getExpiredTime().before(new Date())) {
+					return UserAuthorizedExpiredError;
+				}
 			} catch (Exception e) {
-				return AuthorizedError;
-			}
-
-			query.setParameter("expiredTime", System.currentTimeMillis());
-			try {
-				query.getSingleResult();
-			} catch (Exception e) {
-				return AuthorizedExpiredError;
+				return UserAuthorizedError;
 			}
 
 		}
@@ -77,6 +85,9 @@ public final class HttpUtil {
 			while ((str = br.readLine()) != null) {
 				wholeStr += str;
 			}
+			if (wholeStr.length() == 0) {
+				return null;
+			}
 			return wholeStr;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -88,18 +99,39 @@ public final class HttpUtil {
 		if (error == null) {
 			response.setStatus(200);
 			output.status = 200;
-		} else if (error == AuthorizedError || error == AuthorizedExpiredError) {
+		} else if (error == AuthorizedError || error == UserAuthorizedExpiredError || error == UserAuthorizedError) {
 			response.setStatus(403);
 			output.errorMessage = error.getMessage();
 			output.status = 403;
-		} else if (error == HTTPBodyReadError) {
-			response.setStatus(500);
-			output.errorMessage = error.getMessage();
-			output.status = 500;
 		} else {
 			response.setStatus(500);
 			output.errorMessage = error.getMessage();
 			output.status = 500;
+		}
+	}
+
+	public String getMD5(String str) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(str.getBytes());
+			byte b[] = md.digest();
+
+			int i;
+
+			StringBuffer buf = new StringBuffer("");
+			for (int offset = 0; offset < b.length; offset++) {
+				i = b[offset];
+				if (i < 0) {
+					i += 256;
+				}
+				if (i < 16) {
+					buf.append("0");
+				}
+				buf.append(Integer.toHexString(i));
+			}
+			return buf.toString();
+		} catch (Exception e) {
+			return null;
 		}
 	}
 }

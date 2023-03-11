@@ -4,6 +4,7 @@
 		<class>database.SkRequestInfo</class>
 		<class>database.SkUserInfo</class>
 		<class>database.SkAuthorizedInfo</class>
+		<class>database.SkMaterielInfo</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://db4free.net:3306/sk_restaurant_db"/>
 			<property name="javax.persistence.jdbc.user" value="shikun0625"/>
