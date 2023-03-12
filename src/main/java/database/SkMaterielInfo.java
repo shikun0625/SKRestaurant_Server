@@ -32,7 +32,6 @@ public class SkMaterielInfo implements Serializable {
 
 	private int unit;
 
-	@Expose
 	private int user;
 	
 	@Column(name="create_time")
