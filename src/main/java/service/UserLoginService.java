@@ -3,7 +3,10 @@ package service;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.UUID;
+import java.util.logging.Logger;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import com.google.gson.Gson;
@@ -31,7 +34,7 @@ class UserLoginResp extends HttpServiceResponseData {
  * Servlet implementation class UserLoginService
  */
 public final class UserLoginService extends HttpServiceFather {
-
+	public static Logger logger = Logger.getLogger(UserLoginService.class.getName());
 	public final static Error UserNotExistError = new Error("用户不存在");
 	public final static Error PasswordVerifyError = new Error("密码错误");
 
@@ -46,23 +49,36 @@ public final class UserLoginService extends HttpServiceFather {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 服务开始前统一处理
-		this.beforeLogic(request, response);
-		if (this.error != null) {
-			this.afterLogic();
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		long startTime = System.currentTimeMillis();
+		
+		request.setCharacterEncoding("utf-8");
+		EntityManager eManager = this.entityManagerFactory.createEntityManager();
+		EntityTransaction eTransaction = eManager.getTransaction();
+		eTransaction.begin();
+		HttpServiceOutput output = new HttpServiceOutput();
+		Error error = null;
+		HttpUtil httpUtil = new HttpUtil();
+		String body = httpUtil.getBodyString(request);
+		error = httpUtil.checkHttpRequestAuthorized(eManager, request, body, needCheckUser);
+		if (error != null) {
+			this.afterLogic(request, response, body, output, eManager, error, eTransaction, httpUtil);
+			logger.info("UserLogin Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
 
 		// 转换input
 		UserLoginInput input = null;
 		try {
-			input = new Gson().fromJson(body, UserLoginInput.class);
+			input = new Gson().fromJson(body.toString(), UserLoginInput.class);
 		} catch (JsonSyntaxException e) {
-			this.error = HTTPRequestParameterError;
-			this.afterLogic();
+			error = HTTPRequestParameterError;
+			this.afterLogic(request, response, body, output, eManager, error, eTransaction, httpUtil);
+			logger.info("UserLogin Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
 
@@ -71,8 +87,9 @@ public final class UserLoginService extends HttpServiceFather {
 		query.setParameter("username", input.username);
 		var resultList = query.getResultList();
 		if (resultList.isEmpty()) {
-			this.error = UserNotExistError;
-			this.afterLogic();
+			error = UserNotExistError;
+			this.afterLogic(request, response, body, output, eManager, error, eTransaction, httpUtil);
+			logger.info("UserLogin Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
 
@@ -80,8 +97,9 @@ public final class UserLoginService extends HttpServiceFather {
 		SkUserInfo userInfo = (SkUserInfo) resultList.get(0);
 		String passwordMD5 = new HttpUtil().getMD5(userInfo.getPassword());
 		if (!passwordMD5.equals(input.password)) {
-			this.error = PasswordVerifyError;
-			this.afterLogic();
+			error = PasswordVerifyError;
+			this.afterLogic(request, response, body, output, eManager, error, eTransaction, httpUtil);
+			logger.info("UserLogin Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
 
@@ -93,28 +111,30 @@ public final class UserLoginService extends HttpServiceFather {
 		loginResp.expiredTime = expiredTime;
 
 		query = eManager.createNamedQuery("SkAuthorizedInfo.findWithUserIdAndDeviceId");
-		query.setParameter("deviceId", this.request.getHeader("device_id"));
+		query.setParameter("deviceId", request.getHeader("device_id"));
 		query.setParameter("userId", userInfo.getId());
 		resultList = query.getResultList();
 		if (resultList.size() != 0) {
 			for (var obj : resultList) {
 				SkAuthorizedInfo result = (SkAuthorizedInfo) obj;
-				this.eManager.remove(result);
+				eManager.remove(result);
 			}
 		}
 
 		SkAuthorizedInfo authorizedInfo = new SkAuthorizedInfo();
-		authorizedInfo.setDeviceId(this.request.getHeader("device_id"));
+		authorizedInfo.setDeviceId(request.getHeader("device_id"));
 		authorizedInfo.setExpiredTime(new Timestamp(expiredTime));
 		authorizedInfo.setToken(authToken);
 		authorizedInfo.setUserId(userInfo.getId());
 		authorizedInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		this.eManager.persist(authorizedInfo);
+		eManager.persist(authorizedInfo);
 
-		this.output.resp = loginResp;
+		output.resp = loginResp;
 
 		// 服务结束处理，写入response数据
-		this.afterLogic();
+		this.afterLogic(request, response, body, output, eManager, error, eTransaction, httpUtil);
+		
+		logger.info("UserLogin Post : " + (System.currentTimeMillis() - startTime));
 	}
 
 }

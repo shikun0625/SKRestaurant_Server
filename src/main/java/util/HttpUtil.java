@@ -21,6 +21,8 @@ public final class HttpUtil {
 	public final static Error UserAuthorizedExpiredError = new Error("用户验证过期");
 	public final static Error HTTPBodyReadError = new Error("请求数据读取失败");
 	public final static Error HTTPRepeatRequestError = new Error("重复请求");
+	
+	public final static int USER_ID_NOT_FOUND = -899;
 
 	public static Logger logger = Logger.getLogger(HttpUtil.class.getName());
 
@@ -38,15 +40,12 @@ public final class HttpUtil {
 		Query query = eManager.createNamedQuery("SkRequestInfo.findByRequestId");
 		query.setParameter("requestId", "requestIdString");
 
-		long startTime = System.currentTimeMillis();
 		try {
 			query.getSingleResult();
 			return HTTPRepeatRequestError;
 		} catch (Exception e) {
 
 		}
-		logger.info("query request time : " + (System.currentTimeMillis() - startTime));
-
 		String headerString = timeString + deviceIdString + deviceNameString + osString + osVersionString
 				+ requestIdString;
 		if (userTokenString != null) {
@@ -76,6 +75,17 @@ public final class HttpUtil {
 		}
 		return null;
 	}
+	
+	public int getUserIdByToken(HttpServletRequest request, EntityManager eManager) {
+		Query query = eManager.createNamedQuery("SkAuthorizedInfo.findByToken");
+		query.setParameter("token", request.getHeader("user_token"));
+		try {
+			SkAuthorizedInfo authorizedInfo = (SkAuthorizedInfo) query.getSingleResult();
+			return authorizedInfo.getUserId();
+		} catch (Exception e) {
+			return USER_ID_NOT_FOUND;
+		}
+	}
 
 	public String getBodyString(HttpServletRequest request) {
 		BufferedReader br;
@@ -84,9 +94,6 @@ public final class HttpUtil {
 			String str, wholeStr = "";
 			while ((str = br.readLine()) != null) {
 				wholeStr += str;
-			}
-			if (wholeStr.length() == 0) {
-				return null;
 			}
 			return wholeStr;
 		} catch (IOException e) {

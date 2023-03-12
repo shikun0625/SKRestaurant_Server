@@ -1,7 +1,11 @@
 package database;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
 import javax.persistence.*;
+
+import com.google.gson.annotations.Expose;
 
 
 /**
@@ -11,6 +15,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="`sk_ materiel`")
 @NamedQuery(name="SkMaterielInfo.findAll", query="SELECT s FROM SkMaterielInfo s")
+@NamedQuery(name="SkMaterielInfo.findByUser", query="SELECT s FROM SkMaterielInfo s WHERE s.user = :userId")
 public class SkMaterielInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -27,7 +32,11 @@ public class SkMaterielInfo implements Serializable {
 
 	private int unit;
 
+	@Expose
 	private int user;
+	
+	@Column(name="create_time")
+	private Timestamp createTime;
 
 	public SkMaterielInfo() {
 	}
@@ -86,6 +95,14 @@ public class SkMaterielInfo implements Serializable {
 
 	public void setUser(int user) {
 		this.user = user;
+	}
+	
+	public Timestamp getCreateTime() {
+		return this.createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 }
