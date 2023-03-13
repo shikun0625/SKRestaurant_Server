@@ -16,6 +16,7 @@ import com.google.gson.annotations.Expose;
 @Table(name="`sk_ materiel`")
 @NamedQuery(name="SkMaterielInfo.findAll", query="SELECT s FROM SkMaterielInfo s")
 @NamedQuery(name="SkMaterielInfo.findByUser", query="SELECT s FROM SkMaterielInfo s WHERE s.user = :userId")
+@NamedQuery(name="SkMaterielInfo.findByIdAndUser", query="SELECT s FROM SkMaterielInfo s WHERE s.user = :userId AND s.id = :id")
 public class SkMaterielInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
