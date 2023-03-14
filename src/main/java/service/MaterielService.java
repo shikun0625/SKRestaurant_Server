@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
 
 class MaterielGetResp extends HttpServiceResponseData {
-	public List<MaterielServiceOutputInfo> materiels;
+	public List<MaterielRespInfo> materiels;
 }
 
 class MaterielPostInput {
@@ -39,7 +39,20 @@ class MaterielPutInput {
 	public int unit;
 }
 
-class MaterielServiceOutputInfo extends HttpServiceResponseData {
+class MaterielRespInfo extends HttpServiceResponseData {
+	public MaterielRespInfo() {
+		
+	}
+	public MaterielRespInfo(SkMaterielInfo materielInfo) {
+		this.id = materielInfo.getId();
+		this.count = materielInfo.getCount();
+		this.name = materielInfo.getName();
+		this.remark = materielInfo.getRemark();
+		this.type = materielInfo.getType();
+		this.unit = materielInfo.getUnit();
+		this.createTime = materielInfo.getCreateTime().getTime();
+	}
+	
 	public int id;
 	public int count;
 	public String name;
@@ -47,12 +60,13 @@ class MaterielServiceOutputInfo extends HttpServiceResponseData {
 	public int type;
 	public int unit;
 	public long createTime;
+	
 }
 
 /**
  * Servlet implementation class MaterielService
  */
-public class MaterielService extends HttpServiceFather {
+public final class MaterielService extends HttpServiceFather {
 	private static final long serialVersionUID = 1L;
 	private final static Error MaterielIdAndUserNotMatch = new Error("物料不属于该用户");
 	public static Logger logger = Logger.getLogger(MaterielService.class.getName());
@@ -86,24 +100,24 @@ public class MaterielService extends HttpServiceFather {
 			logger.info("Materiel Get : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-
+		
 		int userId = httpUtil.getUserIdByToken(request, eManager);
 
-		Query query = eManager.createNamedQuery("SkMaterielInfo.findByUser");
+		Query query = null;
+		String typeFromInput = request.getParameter("type");
+		if (typeFromInput == null) {
+			query = eManager.createNamedQuery("SkMaterielInfo.findByUser");
+		} else {
+			query = eManager.createNamedQuery("SkMaterielInfo.findByTypeAndUser");
+			query.setParameter("type", Integer.parseInt(typeFromInput));
+		}
 		query.setParameter("userId", userId);
 		var resultList = query.getResultList();
 		MaterielGetResp resp = new MaterielGetResp();
-		List<MaterielServiceOutputInfo> materiels = new ArrayList<>();
+		List<MaterielRespInfo> materiels = new ArrayList<>();
 		for (Object object : resultList) {
 			SkMaterielInfo materiel = (SkMaterielInfo) object;
-			MaterielServiceOutputInfo info = new MaterielServiceOutputInfo();
-			info.id = materiel.getId();
-			info.name = materiel.getName();
-			info.count = materiel.getCount();
-			info.type = materiel.getType();
-			info.remark = materiel.getRemark();
-			info.unit = materiel.getUnit();
-			info.createTime = materiel.getCreateTime().getTime();
+			MaterielRespInfo info = new MaterielRespInfo(materiel);
 			materiels.add(info);
 		}
 		resp.materiels = materiels;
@@ -162,21 +176,13 @@ public class MaterielService extends HttpServiceFather {
 		
 		eManager.persist(info);
 		
-		MaterielServiceOutputInfo resp = new MaterielServiceOutputInfo();
-		resp.id = info.getId();
-		resp.name = info.getName();
-		resp.count = info.getCount();
-		resp.type = info.getType();
-		resp.remark = info.getRemark();
-		resp.unit = info.getUnit();
-		resp.createTime = info.getCreateTime().getTime();
+		MaterielRespInfo resp = new MaterielRespInfo(info);
 		output.resp = resp;
 
 		// 服务结束处理，写入response数据
 		this.afterLogic(request, response, body, output, eManager, error, eTransaction, httpUtil);
 
 		logger.info("Materiel Post : " + (System.currentTimeMillis() - startTime));
-
 	}
 
 	/**
@@ -233,14 +239,7 @@ public class MaterielService extends HttpServiceFather {
 		materielInfo.setUnit(input.unit);
 		materielInfo = eManager.merge(materielInfo);
 		
-		MaterielServiceOutputInfo resp = new MaterielServiceOutputInfo();
-		resp.id = materielInfo.getId();
-		resp.name = materielInfo.getName();
-		resp.count = materielInfo.getCount();
-		resp.type = materielInfo.getType();
-		resp.remark = materielInfo.getRemark();
-		resp.unit = materielInfo.getUnit();
-		resp.createTime = materielInfo.getCreateTime().getTime();
+		MaterielRespInfo resp = new MaterielRespInfo(materielInfo);
 		output.resp = resp;
 
 		// 服务结束处理，写入response数据

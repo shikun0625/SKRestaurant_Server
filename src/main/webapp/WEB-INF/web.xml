@@ -29,4 +29,24 @@
     <servlet-name>MaterielService</servlet-name>
     <url-pattern>/materiel</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>MaterielActionService</display-name>
+    <servlet-name>MaterielActionService</servlet-name>
+    <servlet-class>service.MaterielActionService</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MaterielActionService</servlet-name>
+    <url-pattern>/materiel/action</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>MealsService</display-name>
+    <servlet-name>MealsService</servlet-name>
+    <servlet-class>service.MealsService</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MealsService</servlet-name>
+    <url-pattern>/meals</url-pattern>
+  </servlet-mapping>
 </web-app>
