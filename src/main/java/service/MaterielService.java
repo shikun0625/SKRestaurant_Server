@@ -68,7 +68,7 @@ class MaterielRespInfo extends HttpServiceResponseData {
  */
 public final class MaterielService extends HttpServiceFather {
 	private static final long serialVersionUID = 1L;
-	private final static Error MaterielIdAndUserNotMatch = new Error("物料不属于该用户");
+	private final static Error MaterielIdNotMatchUser = new Error("物料不属于该用户");
 	public static Logger logger = Logger.getLogger(MaterielService.class.getName());
 
 	/**
@@ -227,7 +227,7 @@ public final class MaterielService extends HttpServiceFather {
 		try {
 			materielInfo = (SkMaterielInfo) query.getSingleResult();
 		} catch (Exception e) {
-			error = MaterielIdAndUserNotMatch;
+			error = MaterielIdNotMatchUser;
 			this.afterLogic(request, response, body, output, eManager, error, eTransaction, httpUtil);
 			logger.info("Materiel Put : " + (System.currentTimeMillis() - startTime));
 			return;

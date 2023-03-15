@@ -12,6 +12,8 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="sk_meals")
 @NamedQuery(name="SkMealsInfo.findAll", query="SELECT s FROM SkMealsInfo s")
+@NamedQuery(name="SkMealsInfo.findByUser", query="SELECT s FROM SkMealsInfo s WHERE s.user = :userId")
+@NamedQuery(name="SkMealsInfo.findByStatusAndUser", query="SELECT s FROM SkMealsInfo s WHERE s.status = :status AND s.user = :userId")
 public class SkMealsInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -33,6 +35,8 @@ public class SkMealsInfo implements Serializable {
 	private int user;
 
 	private float value;
+	
+	private int type;
 
 	public SkMealsInfo() {
 	}
@@ -99,6 +103,14 @@ public class SkMealsInfo implements Serializable {
 
 	public void setValue(float value) {
 		this.value = value;
+	}
+	
+	public int getType() {
+		return this.type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 
 }

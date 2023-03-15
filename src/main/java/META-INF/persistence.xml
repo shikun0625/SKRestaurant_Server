@@ -8,9 +8,9 @@
 		<class>database.SkMaterielActionInfo</class>
 		<class>database.SkMealsInfo</class>
 		<properties>
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://db4free.net:3306/sk_restaurant_db"/>
-			<property name="javax.persistence.jdbc.user" value="shikun0625"/>
-			<property name="javax.persistence.jdbc.password" value="johnny88"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://43.153.175.121:3306/sk_restaurant_db"/>
+			<property name="javax.persistence.jdbc.user" value="sk_restaurant_db"/>
+			<property name="javax.persistence.jdbc.password" value="efhDBdxyMtfHzHph"/>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
 		</properties>
 	</persistence-unit>

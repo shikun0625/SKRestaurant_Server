@@ -49,4 +49,14 @@
     <servlet-name>MealsService</servlet-name>
     <url-pattern>/meals</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>MenuService</display-name>
+    <servlet-name>MenuService</servlet-name>
+    <servlet-class>service.MenuService</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MenuService</servlet-name>
+    <url-pattern>/menu</url-pattern>
+  </servlet-mapping>
 </web-app>
