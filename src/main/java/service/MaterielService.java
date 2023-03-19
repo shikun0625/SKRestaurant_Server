@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
+import util.LoggerUtil;
 
 class MaterielGetResp extends HttpServiceResponseData {
 	public List<MaterielRespInfo> materiels;
@@ -41,8 +42,9 @@ class MaterielPutInput {
 
 class MaterielRespInfo extends HttpServiceResponseData {
 	public MaterielRespInfo() {
-		
+
 	}
+
 	public MaterielRespInfo(SkMaterielInfo materielInfo) {
 		this.id = materielInfo.getId();
 		this.count = materielInfo.getCount();
@@ -52,7 +54,7 @@ class MaterielRespInfo extends HttpServiceResponseData {
 		this.unit = materielInfo.getUnit();
 		this.createTime = materielInfo.getCreateTime().getTime();
 	}
-	
+
 	public int id;
 	public int count;
 	public String name;
@@ -60,7 +62,7 @@ class MaterielRespInfo extends HttpServiceResponseData {
 	public int type;
 	public int unit;
 	public long createTime;
-	
+
 }
 
 /**
@@ -69,7 +71,7 @@ class MaterielRespInfo extends HttpServiceResponseData {
 public final class MaterielService extends HttpServiceFather {
 	private static final long serialVersionUID = 1L;
 	private final static Error MaterielIdNotMatchUser = new Error("物料不属于该用户");
-	public static Logger logger = Logger.getLogger(MaterielService.class.getName());
+	private static Logger logger = LoggerUtil.getLogger(MaterielService.class.getName());
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -100,7 +102,7 @@ public final class MaterielService extends HttpServiceFather {
 			logger.info("Materiel Get : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		int userId = httpUtil.getUserIdByToken(request, eManager);
 
 		Query query = null;
@@ -151,7 +153,7 @@ public final class MaterielService extends HttpServiceFather {
 			logger.info("Materiel Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		int userId = httpUtil.getUserIdByToken(request, eManager);
 
 		// 转换input
@@ -164,7 +166,7 @@ public final class MaterielService extends HttpServiceFather {
 			logger.info("Materiel Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		SkMaterielInfo info = new SkMaterielInfo();
 		info.setCount(0);
 		info.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -173,9 +175,9 @@ public final class MaterielService extends HttpServiceFather {
 		info.setType(input.type);
 		info.setUnit(input.unit);
 		info.setUser(userId);
-		
+
 		eManager.persist(info);
-		
+
 		MaterielRespInfo resp = new MaterielRespInfo(info);
 		output.resp = resp;
 
@@ -206,7 +208,7 @@ public final class MaterielService extends HttpServiceFather {
 			logger.info("Materiel Put : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		int userId = httpUtil.getUserIdByToken(request, eManager);
 
 		// 转换input
@@ -219,7 +221,7 @@ public final class MaterielService extends HttpServiceFather {
 			logger.info("Materiel Put : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		Query query = eManager.createNamedQuery("SkMaterielInfo.findByIdAndUser");
 		query.setParameter("userId", userId);
 		query.setParameter("id", input.id);
@@ -232,13 +234,13 @@ public final class MaterielService extends HttpServiceFather {
 			logger.info("Materiel Put : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		materielInfo.setName(input.name);
 		materielInfo.setRemark(input.remark);
 		materielInfo.setType(input.type);
 		materielInfo.setUnit(input.unit);
 		materielInfo = eManager.merge(materielInfo);
-		
+
 		MaterielRespInfo resp = new MaterielRespInfo(materielInfo);
 		output.resp = resp;
 

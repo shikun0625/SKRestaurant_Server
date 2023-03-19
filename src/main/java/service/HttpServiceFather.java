@@ -38,8 +38,8 @@ public class HttpServiceFather extends HttpServlet {
 	}
 
 	protected void afterLogic(HttpServletRequest request, HttpServletResponse response, String body,
-			HttpServiceOutput output, EntityManager eManager, Error error, EntityTransaction eTransaction, HttpUtil httpUtil)
-			throws IOException {
+			HttpServiceOutput output, EntityManager eManager, Error error, EntityTransaction eTransaction,
+			HttpUtil httpUtil) throws IOException {
 		SkRequestInfo skRequestInfo = new SkRequestInfo();
 		if (body.length() > 0) {
 			skRequestInfo.setBody(body);

@@ -4,22 +4,21 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-
 /**
  * The persistent class for the sk_user database table.
  * 
  */
 @Entity
-@Table(name="sk_user")
-@NamedQuery(name="SkUserInfo.findAll", query="SELECT s FROM SkUserInfo s")
-@NamedQuery(name="SkUserInfo.findByUsername", query="SELECT s FROM SkUserInfo s WHERE s.username = :username")
+@Table(name = "sk_user")
+@NamedQuery(name = "SkUserInfo.findAll", query = "SELECT s FROM SkUserInfo s")
+@NamedQuery(name = "SkUserInfo.findByUsername", query = "SELECT s FROM SkUserInfo s WHERE s.username = :username")
 public class SkUserInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private int id;
 
-	@Column(name="create_time")
+	@Column(name = "create_time")
 	private Timestamp createTime;
 
 	private String email;

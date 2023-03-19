@@ -59,4 +59,24 @@
     <servlet-name>MenuService</servlet-name>
     <url-pattern>/menu</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>OrderService</display-name>
+    <servlet-name>OrderService</servlet-name>
+    <servlet-class>service.OrderService</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>OrderService</servlet-name>
+    <url-pattern>/order</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>AlipayCallBackService</display-name>
+    <servlet-name>AlipayCallBackService</servlet-name>
+    <servlet-class>service.AlipayCallBackService</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AlipayCallBackService</servlet-name>
+    <url-pattern>/alipay</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
+import util.LoggerUtil;
 
 class UserLoginInput {
 	public String username;
@@ -34,7 +35,7 @@ class UserLoginResp extends HttpServiceResponseData {
  * Servlet implementation class UserLoginService
  */
 public final class UserLoginService extends HttpServiceFather {
-	public static Logger logger = Logger.getLogger(UserLoginService.class.getName());
+	private static Logger logger = LoggerUtil.getLogger(UserLoginService.class.getName());
 	public final static Error UserNotExistError = new Error("用户不存在");
 	public final static Error PasswordVerifyError = new Error("密码错误");
 
@@ -55,7 +56,7 @@ public final class UserLoginService extends HttpServiceFather {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		long startTime = System.currentTimeMillis();
-		
+
 		request.setCharacterEncoding("utf-8");
 		EntityManager eManager = this.entityManagerFactory.createEntityManager();
 		EntityTransaction eTransaction = eManager.getTransaction();
@@ -133,7 +134,7 @@ public final class UserLoginService extends HttpServiceFather {
 
 		// 服务结束处理，写入response数据
 		this.afterLogic(request, response, body, output, eManager, error, eTransaction, httpUtil);
-		
+
 		logger.info("UserLogin Post : " + (System.currentTimeMillis() - startTime));
 	}
 

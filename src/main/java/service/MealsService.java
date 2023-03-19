@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
-
+import util.LoggerUtil;
 
 class CreateMealsInput {
 	public String name;
@@ -40,7 +40,9 @@ class UpdateMealsInput {
 }
 
 class MealsRespInfo extends HttpServiceResponseData {
-	public MealsRespInfo() {}
+	public MealsRespInfo() {
+	}
+
 	public MealsRespInfo(SkMealsInfo info) {
 		this.id = info.getId();
 		this.createTime = info.getCreateTime().getTime();
@@ -50,7 +52,7 @@ class MealsRespInfo extends HttpServiceResponseData {
 		this.remark = info.getRemark();
 		this.type = info.getType();
 	}
-	
+
 	public int id;
 	public String name;
 	public int type;
@@ -70,22 +72,25 @@ class MealsGetResp extends HttpServiceResponseData {
  */
 public final class MealsService extends HttpServiceFather {
 	private static final long serialVersionUID = 1L;
-	public static Logger logger = Logger.getLogger(MaterielService.class.getName());
+	private static Logger logger = LoggerUtil.getLogger(MealsService.class.getName());
 	private final static Error MaterielIdNotMatchUser = new Error("物料不属于该用户");
 	private final static Error MealsNotExist = new Error("菜品不存在");
 	private final static Error MealsNotMatchUser = new Error("菜品不属于该用户");
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public MealsService() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public MealsService() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		long startTime = System.currentTimeMillis();
 
 		request.setCharacterEncoding("utf-8");
@@ -102,7 +107,7 @@ public final class MealsService extends HttpServiceFather {
 			logger.info("Meals Get : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		int userId = httpUtil.getUserIdByToken(request, eManager);
 
 		Query query = eManager.createNamedQuery("SkMealsInfo.findByUser");
@@ -113,8 +118,9 @@ public final class MealsService extends HttpServiceFather {
 		for (Object object : resultList) {
 			SkMealsInfo meals = (SkMealsInfo) object;
 			MealsRespInfo info = new MealsRespInfo(meals);
-			Type type =new TypeToken<int[]>(){}.getType(); 
-			int[] materielIds = new Gson().fromJson(meals.getMaterielIds(), type); 
+			Type type = new TypeToken<int[]>() {
+			}.getType();
+			int[] materielIds = new Gson().fromJson(meals.getMaterielIds(), type);
 			ArrayList<MaterielRespInfo> materiels = new ArrayList<>();
 			for (int i = 0; i < materielIds.length; i++) {
 				int materielId = materielIds[i];
@@ -142,9 +148,11 @@ public final class MealsService extends HttpServiceFather {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		long startTime = System.currentTimeMillis();
 
 		request.setCharacterEncoding("utf-8");
@@ -161,7 +169,7 @@ public final class MealsService extends HttpServiceFather {
 			logger.info("Meals Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		int userId = httpUtil.getUserIdByToken(request, eManager);
 
 		// 转换input
@@ -174,9 +182,9 @@ public final class MealsService extends HttpServiceFather {
 			logger.info("Meals Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		ArrayList<MaterielRespInfo> materiels = new ArrayList<>();
-		
+
 		for (int i = 0; i < input.materielIds.length; i++) {
 			int materielId = input.materielIds[i];
 			SkMaterielInfo materiel = eManager.find(SkMaterielInfo.class, materielId);
@@ -190,7 +198,7 @@ public final class MealsService extends HttpServiceFather {
 				return;
 			}
 		}
-		
+
 		SkMealsInfo mealsInfo = new SkMealsInfo();
 		mealsInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		mealsInfo.setName(input.name);
@@ -201,7 +209,7 @@ public final class MealsService extends HttpServiceFather {
 		mealsInfo.setUser(userId);
 		mealsInfo.setType(input.type);
 		eManager.persist(mealsInfo);
-		
+
 		MealsRespInfo resp = new MealsRespInfo(mealsInfo);
 		resp.materiels = materiels;
 		output.resp = resp;
@@ -215,7 +223,8 @@ public final class MealsService extends HttpServiceFather {
 	/**
 	 * @see HttpServlet#doPut(HttpServletRequest, HttpServletResponse)
 	 */
-	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		long startTime = System.currentTimeMillis();
 
 		request.setCharacterEncoding("utf-8");
@@ -232,7 +241,7 @@ public final class MealsService extends HttpServiceFather {
 			logger.info("Meals Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		int userId = httpUtil.getUserIdByToken(request, eManager);
 
 		// 转换input
@@ -245,7 +254,7 @@ public final class MealsService extends HttpServiceFather {
 			logger.info("Meals Put : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		SkMealsInfo mealsInfo = eManager.find(SkMealsInfo.class, input.id);
 		if (mealsInfo == null) {
 			error = MealsNotExist;
@@ -259,11 +268,12 @@ public final class MealsService extends HttpServiceFather {
 			logger.info("Meals Put : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
-		Type type =new TypeToken<int[]>(){}.getType(); 
-		int[] materielIds = new Gson().fromJson(mealsInfo.getMaterielIds(), type); 
+
+		Type type = new TypeToken<int[]>() {
+		}.getType();
+		int[] materielIds = new Gson().fromJson(mealsInfo.getMaterielIds(), type);
 		ArrayList<MaterielRespInfo> materiels = new ArrayList<>();
-		
+
 		for (int i = 0; i < materielIds.length; i++) {
 			int materielId = materielIds[i];
 			SkMaterielInfo materiel = eManager.find(SkMaterielInfo.class, materielId);
@@ -277,11 +287,11 @@ public final class MealsService extends HttpServiceFather {
 				return;
 			}
 		}
-		
+
 		mealsInfo.setValue(input.value);
 		mealsInfo.setStatus(input.status);
 		mealsInfo = eManager.merge(mealsInfo);
-		
+
 		MealsRespInfo resp = new MealsRespInfo(mealsInfo);
 		resp.materiels = materiels;
 		output.resp = resp;

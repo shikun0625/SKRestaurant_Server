@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
+import util.LoggerUtil;
 
 class MaterielActionPostInput {
 	public int materielId;
@@ -32,20 +33,23 @@ class MaterielActionPostInput {
  */
 public final class MaterielActionService extends HttpServiceFather {
 	private static final long serialVersionUID = 1L;
-	public static Logger logger = Logger.getLogger(MaterielActionService.class.getName());
+	private static Logger logger = LoggerUtil.getLogger(MaterielActionService.class.getName());
 	private final static Error MaterielNotExistError = new Error("物料不存在");
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public MaterielActionService() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public MaterielActionService() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		long startTime = System.currentTimeMillis();
 
 		request.setCharacterEncoding("utf-8");
@@ -62,7 +66,7 @@ public final class MaterielActionService extends HttpServiceFather {
 			logger.info("Materiel Action Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		int userId = httpUtil.getUserIdByToken(request, eManager);
 
 		// 转换input
@@ -75,7 +79,7 @@ public final class MaterielActionService extends HttpServiceFather {
 			logger.info("Materiel Action Post : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		Query query = eManager.createNamedQuery("SkMaterielInfo.findByIdAndUser");
 		query.setParameter("userId", userId);
 		query.setParameter("id", input.materielId);
@@ -88,15 +92,11 @@ public final class MaterielActionService extends HttpServiceFather {
 			logger.info("Materiel Put : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
-		if (input.actionType == 0) {
-			materielInfo.setCount(materielInfo.getCount() + input.delta);
-		} else if (input.actionType == 1) {
-			materielInfo.setCount(materielInfo.getCount() - input.delta);
-		}
-		
+
+		materielInfo.setCount(materielInfo.getCount() + input.delta);
+
 		materielInfo = eManager.merge(materielInfo);
-		
+
 		SkMaterielActionInfo actionInfo = new SkMaterielActionInfo();
 		actionInfo.setActionType(input.actionType);
 		actionInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -105,8 +105,8 @@ public final class MaterielActionService extends HttpServiceFather {
 		actionInfo.setMaterielId(input.materielId);
 		actionInfo.setReason(input.reason);
 		eManager.persist(actionInfo);
-		
-		MaterielRespInfo resp = new MaterielRespInfo(materielInfo);		
+
+		MaterielRespInfo resp = new MaterielRespInfo(materielInfo);
 		output.resp = resp;
 
 		// 服务结束处理，写入response数据

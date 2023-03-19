@@ -1,7 +1,6 @@
 package service;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -11,7 +10,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import database.SkMaterielInfo;
 import database.SkMealsInfo;
@@ -20,36 +18,42 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
+import util.LoggerUtil;
 
-class MenuRespInfo extends HttpServiceResponseData {	
+class MenuRespInfo extends HttpServiceResponseData {
 	public int id;
 	public String name;
 	public int type;
 	public float value;
-	public int availableCount;
+	public int[] materielIds;
 }
 
 class MenuGetResp extends HttpServiceResponseData {
-	public List<MenuRespInfo> mealses;
+	public List<MenuRespInfo> menus;
+	public List<MaterielRespInfo> materiels;
 }
+
 /**
  * Servlet implementation class MenuService
  */
 public final class MenuService extends HttpServiceFather {
 	private static final long serialVersionUID = 1L;
-	public static Logger logger = Logger.getLogger(MaterielService.class.getName());
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public MenuService() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	private static Logger logger = LoggerUtil.getLogger(MenuService.class.getName());
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public MenuService() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		long startTime = System.currentTimeMillis();
 
 		request.setCharacterEncoding("utf-8");
@@ -66,7 +70,7 @@ public final class MenuService extends HttpServiceFather {
 			logger.info("Meals Get : " + (System.currentTimeMillis() - startTime));
 			return;
 		}
-		
+
 		int userId = httpUtil.getUserIdByToken(request, eManager);
 
 		Query query = eManager.createNamedQuery("SkMealsInfo.findByStatusAndUser");
@@ -82,26 +86,21 @@ public final class MenuService extends HttpServiceFather {
 			info.name = meals.getName();
 			info.type = meals.getType();
 			info.value = meals.getValue();
-			int minCount = Integer.MAX_VALUE;
-			Type type =new TypeToken<int[]>(){}.getType(); 
-			int[] materielIds = new Gson().fromJson(meals.getMaterielIds(), type); 
-			for (int i = 0; i < materielIds.length; i++) {
-				int materielId = materielIds[i];
-				SkMaterielInfo materiel = eManager.find(SkMaterielInfo.class, materielId);
-				if (materiel != null && materiel.getUser() == userId) {
-					MaterielRespInfo mInfo = new MaterielRespInfo(materiel);
-					if (mInfo.count < minCount) {
-						minCount = Math.min(mInfo.count, minCount);
-					}
-				} else {
-					minCount = 0;
-					break;
-				}
-			}
-			info.availableCount = minCount;
+			info.materielIds = new Gson().fromJson(meals.getMaterielIds(), int[].class);
 			mealses.add(info);
 		}
-		resp.mealses = mealses;
+		resp.menus = mealses;
+
+		query = eManager.createNamedQuery("SkMaterielInfo.findByTypeAndUser");
+		query.setParameter("type", 0);
+		query.setParameter("userId", userId);
+		resultList = query.getResultList();
+		List<MaterielRespInfo> materiels = new ArrayList<>();
+		for (Object object : resultList) {
+			MaterielRespInfo info = new MaterielRespInfo((SkMaterielInfo) object);
+			materiels.add(info);
+		}
+		resp.materiels = materiels;
 
 		output.resp = resp;
 

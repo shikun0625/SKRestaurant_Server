@@ -7,6 +7,7 @@
 		<class>database.SkMaterielInfo</class>
 		<class>database.SkMaterielActionInfo</class>
 		<class>database.SkMealsInfo</class>
+		<class>database.SkOrderInfo</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://43.153.175.121:3306/sk_restaurant_db"/>
 			<property name="javax.persistence.jdbc.user" value="sk_restaurant_db"/>

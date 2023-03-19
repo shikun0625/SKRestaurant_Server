@@ -21,10 +21,10 @@ public final class HttpUtil {
 	public final static Error UserAuthorizedExpiredError = new Error("用户验证过期");
 	public final static Error HTTPBodyReadError = new Error("请求数据读取失败");
 	public final static Error HTTPRepeatRequestError = new Error("重复请求");
-	
+
 	public final static int USER_ID_NOT_FOUND = -899;
 
-	public static Logger logger = Logger.getLogger(HttpUtil.class.getName());
+	public static Logger logger = LoggerUtil.getLogger(HttpUtil.class.getName());
 
 	public Error checkHttpRequestAuthorized(EntityManager eManager, HttpServletRequest request, String bodyStr,
 			boolean checkUser) {
@@ -75,7 +75,7 @@ public final class HttpUtil {
 		}
 		return null;
 	}
-	
+
 	public int getUserIdByToken(HttpServletRequest request, EntityManager eManager) {
 		Query query = eManager.createNamedQuery("SkAuthorizedInfo.findByToken");
 		query.setParameter("token", request.getHeader("user_token"));

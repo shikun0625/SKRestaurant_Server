@@ -4,32 +4,31 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-
 /**
  * The persistent class for the sk_authorized database table.
  * 
  */
 @Entity
-@Table(name="sk_authorized")
-@NamedQuery(name="SkAuthorizedInfo.findAll", query="SELECT s FROM SkAuthorizedInfo s")
-@NamedQuery(name="SkAuthorizedInfo.findWithUserIdAndDeviceId", query="SELECT s FROM SkAuthorizedInfo s WHERE s.deviceId = :deviceId AND s.userId = :userId")
-@NamedQuery(name="SkAuthorizedInfo.findByToken", query="SELECT s FROM SkAuthorizedInfo s WHERE s.token = :token")
+@Table(name = "sk_authorized")
+@NamedQuery(name = "SkAuthorizedInfo.findAll", query = "SELECT s FROM SkAuthorizedInfo s")
+@NamedQuery(name = "SkAuthorizedInfo.findWithUserIdAndDeviceId", query = "SELECT s FROM SkAuthorizedInfo s WHERE s.deviceId = :deviceId AND s.userId = :userId")
+@NamedQuery(name = "SkAuthorizedInfo.findByToken", query = "SELECT s FROM SkAuthorizedInfo s WHERE s.token = :token")
 public class SkAuthorizedInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String token;
 
-	@Column(name="create_time")
+	@Column(name = "create_time")
 	private Timestamp createTime;
 
-	@Column(name="device_id")
+	@Column(name = "device_id")
 	private String deviceId;
 
-	@Column(name="expired_time")
+	@Column(name = "expired_time")
 	private Timestamp expiredTime;
 
-	@Column(name="user_id")
+	@Column(name = "user_id")
 	private int userId;
 
 	public SkAuthorizedInfo() {

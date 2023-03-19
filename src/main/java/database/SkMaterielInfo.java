@@ -5,25 +5,27 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
 
 /**
  * The persistent class for the `sk_ materiel` database table.
  * 
  */
 @Entity
-@Table(name="`sk_ materiel`")
-@NamedQuery(name="SkMaterielInfo.findAll", query="SELECT s FROM SkMaterielInfo s")
-@NamedQuery(name="SkMaterielInfo.findByUser", query="SELECT s FROM SkMaterielInfo s WHERE s.user = :userId")
-@NamedQuery(name="SkMaterielInfo.findByIdAndUser", query="SELECT s FROM SkMaterielInfo s WHERE s.user = :userId AND s.id = :id")
-@NamedQuery(name="SkMaterielInfo.findByTypeAndUser", query="SELECT s FROM SkMaterielInfo s WHERE s.user = :userId AND s.type = :type")
+@Table(name = "`sk_ materiel`")
+@NamedQuery(name = "SkMaterielInfo.findAll", query = "SELECT s FROM SkMaterielInfo s")
+@NamedQuery(name = "SkMaterielInfo.findByUser", query = "SELECT s FROM SkMaterielInfo s WHERE s.user = :userId")
+@NamedQuery(name = "SkMaterielInfo.findByIdAndUser", query = "SELECT s FROM SkMaterielInfo s WHERE s.user = :userId AND s.id = :id")
+@NamedQuery(name = "SkMaterielInfo.findByTypeAndUser", query = "SELECT s FROM SkMaterielInfo s WHERE s.user = :userId AND s.type = :type")
 public class SkMaterielInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	private int count;
@@ -37,8 +39,8 @@ public class SkMaterielInfo implements Serializable {
 	private int unit;
 
 	private int user;
-	
-	@Column(name="create_time")
+
+	@Column(name = "create_time")
 	private Timestamp createTime;
 
 	public SkMaterielInfo() {
@@ -99,7 +101,7 @@ public class SkMaterielInfo implements Serializable {
 	public void setUser(int user) {
 		this.user = user;
 	}
-	
+
 	public Timestamp getCreateTime() {
 		return this.createTime;
 	}
