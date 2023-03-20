@@ -9,15 +9,16 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import database.SkMaterielInfo;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
 import util.LoggerUtil;
 
@@ -68,6 +69,7 @@ class MaterielRespInfo extends HttpServiceResponseData {
 /**
  * Servlet implementation class MaterielService
  */
+@WebServlet("/materiel")
 public final class MaterielService extends HttpServiceFather {
 	private static final long serialVersionUID = 1L;
 	private final static Error MaterielIdNotMatchUser = new Error("物料不属于该用户");
@@ -78,6 +80,7 @@ public final class MaterielService extends HttpServiceFather {
 	 */
 	public MaterielService() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -248,14 +251,6 @@ public final class MaterielService extends HttpServiceFather {
 		this.afterLogic(request, response, body, output, eManager, error, eTransaction, httpUtil);
 
 		logger.info("Materiel Put : " + (System.currentTimeMillis() - startTime));
-	}
-
-	/**
-	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
-	 */
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 }

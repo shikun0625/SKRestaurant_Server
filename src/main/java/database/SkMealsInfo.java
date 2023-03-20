@@ -4,12 +4,13 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+
 /**
  * The persistent class for the sk_meals database table.
  * 
  */
 @Entity
-@Table(name = "sk_meals")
+@Table(name="sk_meals")
 @NamedQuery(name = "SkMealsInfo.findAll", query = "SELECT s FROM SkMealsInfo s")
 @NamedQuery(name = "SkMealsInfo.findByUser", query = "SELECT s FROM SkMealsInfo s WHERE s.user = :userId")
 @NamedQuery(name = "SkMealsInfo.findByStatusAndUser", query = "SELECT s FROM SkMealsInfo s WHERE s.status = :status AND s.user = :userId")
@@ -19,10 +20,10 @@ public class SkMealsInfo implements Serializable {
 	@Id
 	private int id;
 
-	@Column(name = "create_time")
+	@Column(name="create_time")
 	private Timestamp createTime;
 
-	@Column(name = "materiel_ids")
+	@Column(name="materiel_ids")
 	private String materielIds;
 
 	private String name;
@@ -31,11 +32,11 @@ public class SkMealsInfo implements Serializable {
 
 	private int status;
 
+	private int type;
+
 	private int user;
 
 	private float value;
-
-	private int type;
 
 	public SkMealsInfo() {
 	}
@@ -88,6 +89,14 @@ public class SkMealsInfo implements Serializable {
 		this.status = status;
 	}
 
+	public int getType() {
+		return this.type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	public int getUser() {
 		return this.user;
 	}
@@ -102,14 +111,6 @@ public class SkMealsInfo implements Serializable {
 
 	public void setValue(float value) {
 		this.value = value;
-	}
-
-	public int getType() {
-		return this.type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
 	}
 
 }

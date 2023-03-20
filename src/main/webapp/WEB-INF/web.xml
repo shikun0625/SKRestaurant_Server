@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="5.0">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
   <display-name>SKRestaurant_Server</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
@@ -9,74 +9,4 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
-  <servlet>
-    <description></description>
-    <display-name>UserLoginService</display-name>
-    <servlet-name>UserLoginService</servlet-name>
-    <servlet-class>service.UserLoginService</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UserLoginService</servlet-name>
-    <url-pattern>/user/login</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>MaterielService</display-name>
-    <servlet-name>MaterielService</servlet-name>
-    <servlet-class>service.MaterielService</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>MaterielService</servlet-name>
-    <url-pattern>/materiel</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>MaterielActionService</display-name>
-    <servlet-name>MaterielActionService</servlet-name>
-    <servlet-class>service.MaterielActionService</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>MaterielActionService</servlet-name>
-    <url-pattern>/materiel/action</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>MealsService</display-name>
-    <servlet-name>MealsService</servlet-name>
-    <servlet-class>service.MealsService</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>MealsService</servlet-name>
-    <url-pattern>/meals</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>MenuService</display-name>
-    <servlet-name>MenuService</servlet-name>
-    <servlet-class>service.MenuService</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>MenuService</servlet-name>
-    <url-pattern>/menu</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>OrderService</display-name>
-    <servlet-name>OrderService</servlet-name>
-    <servlet-class>service.OrderService</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>OrderService</servlet-name>
-    <url-pattern>/order</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>AlipayCallBackService</display-name>
-    <servlet-name>AlipayCallBackService</servlet-name>
-    <servlet-class>service.AlipayCallBackService</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AlipayCallBackService</servlet-name>
-    <url-pattern>/alipay</url-pattern>
-  </servlet-mapping>
 </web-app>

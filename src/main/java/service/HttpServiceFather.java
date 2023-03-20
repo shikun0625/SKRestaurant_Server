@@ -7,14 +7,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
 import database.SkRequestInfo;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
 
 public class HttpServiceFather extends HttpServlet {
@@ -62,6 +62,7 @@ public class HttpServiceFather extends HttpServlet {
 		eManager.close();
 		eTransaction.commit();
 		httpUtil.setStatus(response, output, error);
+		response.setCharacterEncoding("utf-8");
 		response.getWriter().write(new Gson().toJson(output));
 	}
 }

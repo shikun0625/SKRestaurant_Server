@@ -4,12 +4,13 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+
 /**
  * The persistent class for the sk_order database table.
  * 
  */
 @Entity
-@Table(name = "sk_order")
+@Table(name="sk_order")
 @NamedQuery(name = "SkOrderInfo.findAll", query = "SELECT s FROM SkOrderInfo s")
 @NamedQuery(name = "SkOrderInfo.countTodayWithType", query = "SELECT COUNT(s) FROM SkOrderInfo s WHERE s.type = :type AND s.createTime > :minTime AND s.createTime < :maxTime")
 @NamedQuery(name = "SkOrderInfo.findByIdAndUser", query = "SELECT s FROM SkOrderInfo s WHERE s.id = :id AND s.user = :user")
@@ -19,30 +20,30 @@ public class SkOrderInfo implements Serializable {
 	@Id
 	private String id;
 
-	@Column(name = "create_time")
+	@Column(name="create_time")
 	private Timestamp createTime;
 
 	private String menus;
 
 	private String number;
 
-	@Column(name = "pay_type")
-	private Integer payType;
+	@Column(name="pay_type")
+	private int payType;
 
 	private String remark;
 
 	private int status;
 
-	@Column(name = "takeout_order")
+	@Column(name="takeout_order")
 	private String takeoutOrder;
 
-	@Column(name = "takeout_platform")
-	private Integer takeoutPlatform;
+	@Column(name="takeout_platform")
+	private int takeoutPlatform;
 
-	@Column(name = "takeout_status")
-	private Integer takeoutStatus;
+	@Column(name="takeout_status")
+	private int takeoutStatus;
 
-	@Column(name = "total_amount")
+	@Column(name="total_amount")
 	private float totalAmount;
 
 	private int type;
@@ -84,11 +85,11 @@ public class SkOrderInfo implements Serializable {
 		this.number = number;
 	}
 
-	public Integer getPayType() {
+	public int getPayType() {
 		return this.payType;
 	}
 
-	public void setPayType(Integer payType) {
+	public void setPayType(int payType) {
 		this.payType = payType;
 	}
 
@@ -116,19 +117,19 @@ public class SkOrderInfo implements Serializable {
 		this.takeoutOrder = takeoutOrder;
 	}
 
-	public Integer getTakeoutPlatform() {
+	public int getTakeoutPlatform() {
 		return this.takeoutPlatform;
 	}
 
-	public void setTakeoutPlatform(Integer takeoutPlatform) {
+	public void setTakeoutPlatform(int takeoutPlatform) {
 		this.takeoutPlatform = takeoutPlatform;
 	}
 
-	public Integer getTakeoutStatus() {
+	public int getTakeoutStatus() {
 		return this.takeoutStatus;
 	}
 
-	public void setTakeoutStatus(Integer takeoutStatus) {
+	public void setTakeoutStatus(int takeoutStatus) {
 		this.takeoutStatus = takeoutStatus;
 	}
 

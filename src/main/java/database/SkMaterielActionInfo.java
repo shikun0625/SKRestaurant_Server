@@ -4,28 +4,29 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+
 /**
  * The persistent class for the sk_materiel_action database table.
  * 
  */
 @Entity
-@Table(name = "sk_materiel_action")
-@NamedQuery(name = "SkMaterielActionInfo.findAll", query = "SELECT s FROM SkMaterielActionInfo s")
+@Table(name="sk_materiel_action")
+@NamedQuery(name="SkMaterielActionInfo.findAll", query="SELECT s FROM SkMaterielActionInfo s")
 public class SkMaterielActionInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String id;
 
-	@Column(name = "action_type")
+	@Column(name="action_type")
 	private int actionType;
 
-	@Column(name = "create_time")
+	@Column(name="create_time")
 	private Timestamp createTime;
 
 	private int delta;
 
-	@Column(name = "materiel_id")
+	@Column(name="materiel_id")
 	private int materielId;
 
 	private int reason;

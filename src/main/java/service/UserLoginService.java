@@ -8,16 +8,17 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import database.SkAuthorizedInfo;
 import database.SkUserInfo;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
 import util.LoggerUtil;
 
@@ -34,19 +35,19 @@ class UserLoginResp extends HttpServiceResponseData {
 /**
  * Servlet implementation class UserLoginService
  */
+@WebServlet("/user/login")
 public final class UserLoginService extends HttpServiceFather {
+	private static final long serialVersionUID = 1L;
 	private static Logger logger = LoggerUtil.getLogger(UserLoginService.class.getName());
 	public final static Error UserNotExistError = new Error("用户不存在");
 	public final static Error PasswordVerifyError = new Error("密码错误");
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public UserLoginService() {
 		super();
-		this.needCheckUser = false;
+		// TODO Auto-generated constructor stub
 	}
 
 	/**

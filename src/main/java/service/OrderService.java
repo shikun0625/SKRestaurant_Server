@@ -10,6 +10,11 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -18,10 +23,6 @@ import database.SkMaterielActionInfo;
 import database.SkMaterielInfo;
 import database.SkMealsInfo;
 import database.SkOrderInfo;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import util.HttpUtil;
 import util.LoggerUtil;
 
@@ -71,6 +72,7 @@ class SetOrderInput {
 /**
  * Servlet implementation class OrderService
  */
+@WebServlet("/order")
 public final class OrderService extends HttpServiceFather {
 	private static final long serialVersionUID = 1L;
 	private static Logger logger = LoggerUtil.getLogger(OrderService.class.getName());
