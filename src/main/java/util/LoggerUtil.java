@@ -14,8 +14,8 @@ public final class LoggerUtil {
 	public static Logger getLogger(String name) {
 		Logger logger = Logger.getLogger(name);
 		try {
-			Path path = Paths.get("/www/wwwroot/sk_restaurant/logs/");
-//			Path path = Paths.get("/Users/qiangni/Documents/Tomcat/apache-tomcat-10.1.1/logs/");
+//			Path path = Paths.get("/www/wwwroot/sk_restaurant/logs/");
+			Path path = Paths.get("/Users/qiangni/Documents/Tomcat/apache-tomcat-9.0.73/logs/");
 			Path pathCreatePath = Files.createDirectories(path);
 
 			FileHandler fileHandler = new FileHandler(

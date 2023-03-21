@@ -27,8 +27,14 @@ public class SkOrderInfo implements Serializable {
 
 	private String number;
 
+	@Column(name="pay_amount")
+	private Float payAmount;
+
+	@Column(name="pay_trade_no")
+	private String payTradeNo;
+
 	@Column(name="pay_type")
-	private int payType;
+	private Integer payType;
 
 	private String remark;
 
@@ -38,10 +44,10 @@ public class SkOrderInfo implements Serializable {
 	private String takeoutOrder;
 
 	@Column(name="takeout_platform")
-	private int takeoutPlatform;
+	private Integer takeoutPlatform;
 
 	@Column(name="takeout_status")
-	private int takeoutStatus;
+	private Integer takeoutStatus;
 
 	@Column(name="total_amount")
 	private float totalAmount;
@@ -85,11 +91,27 @@ public class SkOrderInfo implements Serializable {
 		this.number = number;
 	}
 
-	public int getPayType() {
+	public Float getPayAmount() {
+		return this.payAmount;
+	}
+
+	public void setPayAmount(Float payAmount) {
+		this.payAmount = payAmount;
+	}
+
+	public String getPayTradeNo() {
+		return this.payTradeNo;
+	}
+
+	public void setPayTradeNo(String payTradeNo) {
+		this.payTradeNo = payTradeNo;
+	}
+
+	public Integer getPayType() {
 		return this.payType;
 	}
 
-	public void setPayType(int payType) {
+	public void setPayType(Integer payType) {
 		this.payType = payType;
 	}
 
@@ -117,19 +139,19 @@ public class SkOrderInfo implements Serializable {
 		this.takeoutOrder = takeoutOrder;
 	}
 
-	public int getTakeoutPlatform() {
+	public Integer getTakeoutPlatform() {
 		return this.takeoutPlatform;
 	}
 
-	public void setTakeoutPlatform(int takeoutPlatform) {
+	public void setTakeoutPlatform(Integer takeoutPlatform) {
 		this.takeoutPlatform = takeoutPlatform;
 	}
 
-	public int getTakeoutStatus() {
+	public Integer getTakeoutStatus() {
 		return this.takeoutStatus;
 	}
 
-	public void setTakeoutStatus(int takeoutStatus) {
+	public void setTakeoutStatus(Integer takeoutStatus) {
 		this.takeoutStatus = takeoutStatus;
 	}
 

@@ -30,6 +30,8 @@ class CreateOrderInput {
 	public Map<String, Integer> menus;
 	public float totalAmount;
 	public int type;
+	public Float payAmount;
+	public Integer payType;
 }
 
 class OrderRespInfo extends HttpServiceResponseData {
@@ -47,6 +49,8 @@ class OrderRespInfo extends HttpServiceResponseData {
 		this.totalAmount = info.getTotalAmount();
 		this.type = info.getType();
 		this.payType = info.getPayType();
+		this.payAmount = info.getPayAmount();
+		this.payTradeNo = info.getPayTradeNo();
 	}
 
 	public String orderId;
@@ -61,12 +65,15 @@ class OrderRespInfo extends HttpServiceResponseData {
 	public float totalAmount;
 	public int type;
 	public Integer payType;
+	public Float payAmount;
+	public String payTradeNo;
 }
 
 class SetOrderInput {
 	public String orderId;
 	public Integer status;
 	public Integer payType;
+	public Float payAmount;
 }
 
 /**
@@ -171,6 +178,14 @@ public final class OrderService extends HttpServiceFather {
 		default:
 			break;
 		}
+		
+		// 如果是现金和公关的话，会直接传payType，这时直接将订单调整为已支付状态
+		if (input.payType != null) {
+			info.setPayType(input.payType);
+			info.setPayAmount(input.payAmount);
+			info.setStatus(8);
+		}
+		
 		eManager.persist(info);
 
 		// 修改物料数量
@@ -260,6 +275,9 @@ public final class OrderService extends HttpServiceFather {
 		}
 		if (input.payType != null) {
 			orderInfo.setPayType(input.payType);
+		}
+		if (input.payAmount != null) {
+			orderInfo.setPayAmount(input.payAmount);
 		}
 
 		orderInfo = eManager.merge(orderInfo);

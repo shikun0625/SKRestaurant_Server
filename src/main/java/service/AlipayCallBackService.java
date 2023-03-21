@@ -30,7 +30,7 @@ public final class AlipayCallBackService extends HttpServiceFather {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		logger.info("AlipayCallback Post : ");
 	}
 
 }
